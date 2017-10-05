@@ -1,0 +1,94 @@
+var express = require('express');
+var router = express.Router();
+//var ejs = require("ejs");
+var mysql = require('./mysql');
+
+
+/* GET users listing. */
+router.get('/', function (req, res, next) {
+    res.send('respond with a resource');
+});
+
+
+router.post('/doLogin', function (req, res, next) {
+	console.log("i am here");
+	 var reqUsername = req.body.username;
+	 var reqPassword = req.body.password;
+	var getUser="select * from users where username='"+reqUsername+"' and password='" + reqPassword +"'";
+	console.log("Query is:"+getUser);
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			if(results.length > 0){
+				console.log("valid Login");
+				
+			            res.status(201).json({message:"valid login"});
+			       
+			}
+			else {    
+				
+				console.log("Invalid Login");
+				
+			            res.status(401).json({message: "invalid login"});
+			        
+			}
+		}  
+	},getUser);
+   
+
+});
+
+router.post('/doSignup', function (req, res, next) {
+
+  /*  var reqUsername = req.body.username;
+    var reqPassword = req.body.password;
+    var reqfirstname = req.body.firstname;
+    var reqlastname = req.body.lastname;
+    var reqemail = req.body.email;
+    var reqpassword = req.body.password; */
+    // Just checking if the username is in our user's array
+ /*   var theUser = users.filter(function(user){
+        return user.username === reqUsername;
+    }); */
+    var getUser="insert into users(username, password, firstname, lastname) values ('"+req.param("email")+"','" + req.param("password")+"','" + req.param("firstname")+"','" + req.param("lastname")+"')";
+	console.log("Query is:"+getUser);
+	
+	mysql.fetchData(function(err,results){
+		if(err){
+			throw err;
+		}
+		else 
+		{
+			
+			console.log("The registration has been successful, please log in");
+				console.log("valid Login");
+				
+			            res.status(201).json({message:"The registration has been successful, please log in"});
+			       
+			}
+			
+			    
+			},getUser);
+		
+    // Check the password
+  //  if(theUser.length === 1){
+    //    theUser[0].password === reqPassword &&
+      //  res.status(201).json({message: "Login successful"}) ||
+       // res.status(401).json({message: "Login failed"});
+   // } else {
+   //     res.status(401).json({message: "Login failed"});
+ //   }
+    
+
+    // if(theUser.password === reqPassword){
+    //     res.status(201).json({message: "Login successful"});
+    // } else {
+    //     res.status(401).json({message: "Login failed"});
+    // }
+
+}); 
+
+module.exports = router;
