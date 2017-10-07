@@ -2,11 +2,41 @@ var express = require('express');
 var router = express.Router();
 //var ejs = require("ejs");
 var mysql = require('./mysql');
+var multer = require('multer');
+var glob = require('glob');
 
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+});
+
+var upload = multer({storage:storage});
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
+/*router.get('/', function (req, res, next) {
     res.send('respond with a resource');
+});*/
+
+router.get('/', function (req, res, next) {
+    var resArr = [];
+
+    glob("public/uploads/*", function (er, files) {
+
+        var resArr = files.map(function (file) {
+            var imgJSON = {};
+            imgJSON.img = 'uploads/'+file.split('/')[2];
+            imgJSON.cols = 2  ;
+            return imgJSON;
+        });
+
+        console.log(resArr);
+        res.status(200).send(resArr);
+    });
+
 });
 
 
@@ -90,5 +120,10 @@ router.post('/doSignup', function (req, res, next) {
     // }
 
 }); 
+router.post('/upload', upload.any(), function (req, res, next) {
+    console.log(req.body);
+    console.log(req.file);
+    res.status(204).end();
+});
 
 module.exports = router;
