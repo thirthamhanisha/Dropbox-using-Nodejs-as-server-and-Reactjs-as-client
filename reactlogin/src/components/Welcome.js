@@ -77,7 +77,7 @@ class Welcome extends Component {
                         name="mypic"
                         onChange={this.handleFileUpload}
                     />
-                    <ImageGridList images={this.state.images}/>
+                    <ImageGridList items={this.state.images}/>
                     <Link to="/login">Logout</Link>
                 </div>
             </div>

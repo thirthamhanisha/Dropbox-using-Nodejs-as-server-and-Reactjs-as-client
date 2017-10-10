@@ -4,6 +4,8 @@ var router = express.Router();
 var mysql = require('./mysql');
 var multer = require('multer');
 var glob = require('glob');
+var path = require('path');
+const fs = require('fs');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -28,16 +30,30 @@ router.get('/', function (req, res, next) {
 
         var resArr = files.map(function (file) {
             var imgJSON = {};
-            imgJSON.img = 'uploads/'+file.split('/')[2];
+            imgJSON = file.split('/')[2];
             imgJSON.cols = 2  ;
             return imgJSON;
         });
 
         console.log(resArr);
         res.status(200).send(resArr);
-    });
+    }); 
+	/*
+	var response = "";
+	testFolder = "../public/uploads";
+	console.log(testFolder);
+	fs.readdir(testFolder, function (err, files) 
+	{
+		console.log(files.length);
+		console.log(files);
+		for(var i=0;i<files.length;i++)
+		{
+			response += files[i]+"<br>";
+		}
+		res.status(200).send(response);
+	}); */
 
-});
+}); 
 
 
 router.post('/doLogin', function (req, res, next) {
@@ -86,6 +102,15 @@ router.post('/doSignup', function (req, res, next) {
     var getUser="insert into users(username, password, firstname, lastname) values ('"+req.param("email")+"','" + req.param("password")+"','" + req.param("firstname")+"','" + req.param("lastname")+"')";
 	console.log("Query is:"+getUser);
 	
+	var Ufolder = '../public/uploads/'+req.param("email");
+	const dir = path.join(__dirname,Ufolder);
+	const mkdirSync = function (dirPath) {
+		  try {
+		    fs.mkdirSync(dirPath)
+		  } catch (err) {
+		    if (err.code !== 'EEXIST') throw err
+		  }
+		};
 	mysql.fetchData(function(err,results){
 		if(err){
 			throw err;
@@ -95,7 +120,8 @@ router.post('/doSignup', function (req, res, next) {
 			
 			console.log("The registration has been successful, please log in");
 				console.log("valid Login");
-				
+				mkdirSync(dir);
+				   
 			            res.status(201).json({message:"The registration has been successful, please log in"});
 			       
 			}

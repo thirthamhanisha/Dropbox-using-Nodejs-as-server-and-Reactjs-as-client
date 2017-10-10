@@ -24,7 +24,7 @@ class ImageGridList extends Component {
 
     static propTypes = {
         classes: PropTypes.object.isRequired,
-        images: PropTypes.array.isRequired
+        items: PropTypes.array.isRequired
     };
 
     render(){
@@ -32,10 +32,12 @@ class ImageGridList extends Component {
 
         return (
             <div className={classes.root}>
-                    <GridList cellHeight={250} className={classes.gridList} cols={10}>
-                        {this.props.images.map(tile => (
-                            <GridListTile key={tile.img} cols={tile.cols || 1}>
-                                <img src={'http://localhost:3001/'+tile.img} alt={'myimage'}/>
+                    <GridList cellHeight={25} className={classes.gridList} cols={1}>
+                        {this.props.items.map(tile => (
+                            <GridListTile key={tile} cols={tile.cols || 1}>
+                            
+                            <div> {tile} </div>
+                          
                             </GridListTile>
                         ))}
                     </GridList>

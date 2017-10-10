@@ -63,7 +63,7 @@ class Login extends Component {
                                 className="btn btn-primary"
                                 type="button"
                                 onClick={() => this.props.handleSubmit(this.state)}>
-                                Submit
+                                Login
                             </button>
                         </div>
                     </form>
