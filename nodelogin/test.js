@@ -21,7 +21,22 @@ describe('Server test', function(){
         server.listen(3001);
     })*/
 
-    describe('Log in', function(){
+	describe('home', function(){
+        it('home should be sucessful', function(done){
+
+            authenticated
+                .get('/users/')
+                .send(userCredentials)
+                .end(function(err, response){
+                    expect(response.statusCode).to.equal(201);
+                    expect('Location','/home');
+                    done();
+                });
+
+
+        });
+    });
+	describe('Log in', function(){
         it('Login should be sucessful', function(done){
 
             authenticated
@@ -36,7 +51,23 @@ describe('Server test', function(){
 
         });
     });
+	describe('upload', function(){
+        it('upload should be sucessful', function(done){
 
+            authenticated
+                .post('/users/upload')
+                .send(userCredentials)
+                .end(function(err, response){
+                    expect(response.statusCode).to.equal(201);
+                    expect('Location','/home');
+                    done();
+                });
+
+
+        });
+    });
+	
+	
     describe('Sign up', function(){
         it('Signup should be successful', function(done){
             const newUser = {
@@ -56,5 +87,9 @@ describe('Server test', function(){
 
 
         });
-    })
+    });
+    
+    
+    
+    
 })

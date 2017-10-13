@@ -36,7 +36,7 @@ router.get('/', function (req, res, next) {
         });
 
         console.log(resArr);
-        res.status(200).send(resArr);
+        res.status(201).send(resArr);
     }); 
 	/*
 	var response = "";
@@ -293,7 +293,7 @@ router.post('/doShare', function (req, res, next) {
 router.post('/upload', upload.any(), function (req, res, next) {
     console.log(req.body);
     console.log(req.file);
-    res.status(204).end();
+    res.status(201).end();
 });
 
 module.exports = router;
