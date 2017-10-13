@@ -28,6 +28,8 @@ class Welcome extends Component {
 	            });
 
 	    };
+	    
+	   
 
     static propTypes = {
         username: PropTypes.string.isRequired
@@ -38,16 +40,16 @@ class Welcome extends Component {
         	images: []
     };
 
-/*   componentWillMount(){
+   componentWillMount(){
         this.setState({
             username : this.props.username
             
         }); 
         //document.title = `Welcome, ${this.state.username} !!`;
-    } */
+    } 
 
     componentDidMount(){
-    	
+    	username: this.state.username;
         document.title = `Welcome, ${this.state.username} !!`;
         API.getImages()
         .then((data) => {
@@ -69,7 +71,7 @@ class Welcome extends Component {
                         align={'center'}
                         type="display3"
                     >
-                        My Photo App
+                        DropBox
                     </Typography>
                     <TextField
                         className={'fileupload'}
@@ -77,7 +79,12 @@ class Welcome extends Component {
                         name="mypic"
                         onChange={this.handleFileUpload}
                     />
-                    <ImageGridList items={this.state.images}/>
+                    <ImageGridList items={this.state.images} route={this.props.route}/>
+                    <div className="form-group" >                                       
+                    
+                    
+                </div>
+                    
                     <Link to="/login">Logout</Link>
                 </div>
             </div>

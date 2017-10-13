@@ -1,22 +1,23 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import * as API from '../api/API';
+class Share extends Component {
 
-class Login extends Component {
-
-    static propTypes = {
-        handleSubmit: PropTypes.func.isRequired
+	static propTypes = {
+        handleShare: PropTypes.func.isRequired
     };
-
     state = {
         username: '',
-        password: '',
+        username1:'',
+        folder: '',
               
     };
 
     componentWillMount(){
         this.setState({
             username: '',
-            password: '',
+            username1:'',
+            folder: '',
             
         });
     }
@@ -27,7 +28,7 @@ class Login extends Component {
                 <div className="col-md-3">
                     <form>
                         <div className="form-group">
-                            <h1>Login</h1>
+                            <h1>Group</h1>
                         </div>
                         <div className="form-group">
                             <input
@@ -43,27 +44,41 @@ class Login extends Component {
                                 }}
                             />
                         </div>
-
-                        <div className="form-group">
+                            <div className="form-group">
                             <input
                                 className="form-control"
-                                type="password"
-                                label="password"
-                                placeholder="Enter Password"
-                                value={this.state.password}
+                                type="email"
+                                label="Username1"
+                                placeholder="Enter Username1"
+                                value={this.state.username1}
                                 onChange={(event) => {
                                     this.setState({
-                                        password: event.target.value
+                                        username1: event.target.value
                                     });
                                 }}
                             />
                         </div>
+                            <div className="form-group">
+                            <input
+                                className="form-control"
+                                type="text"
+                                label="folder"
+                                placeholder="Enter folder"
+                                value={this.state.folder}
+                                onChange={(event) => {
+                                    this.setState({
+                                        folder: event.target.value
+                                    });
+                                }}
+                            />
+                        </div>
+                        
                         <div className="form-group">
                             <button
                                 className="btn btn-primary"
                                 type="button"
-                                onClick={() => this.props.handleSubmit(this.state)}>
-                                Login
+                                onClick={() => this.props.handleShare(this.state)}>
+                                share
                             </button>
                         </div>
                     </form>
@@ -74,4 +89,4 @@ class Login extends Component {
     }
 }
 
-export default Login;
+export default Share;

@@ -87,48 +87,90 @@ router.post('/doLogin', function (req, res, next) {
 
 });
 
+router.get('/download/:filename', function (req, res, next) {
+	var filepath = "./public/uploads/"+req.param("filename");
+	//console.log("test");
+	//console.log(req.param("filename"));
+     res.download(filepath);
+
+});
+
 router.post('/doSignup', function (req, res, next) {
 
-  /*  var reqUsername = req.body.username;
-    var reqPassword = req.body.password;
-    var reqfirstname = req.body.firstname;
-    var reqlastname = req.body.lastname;
-    var reqemail = req.body.email;
-    var reqpassword = req.body.password; */
-    // Just checking if the username is in our user's array
- /*   var theUser = users.filter(function(user){
-        return user.username === reqUsername;
-    }); */
-    var getUser="insert into users(username, password, firstname, lastname) values ('"+req.param("email")+"','" + req.param("password")+"','" + req.param("firstname")+"','" + req.param("lastname")+"')";
-	console.log("Query is:"+getUser);
-	
-	var Ufolder = '../public/uploads/'+req.param("email");
-	const dir = path.join(__dirname,Ufolder);
-	const mkdirSync = function (dirPath) {
-		  try {
-		    fs.mkdirSync(dirPath)
-		  } catch (err) {
-		    if (err.code !== 'EEXIST') throw err
-		  }
-		};
-	mysql.fetchData(function(err,results){
-		if(err){
-			throw err;
-		}
-		else 
-		{
-			
-			console.log("The registration has been successful, please log in");
-				console.log("valid Login");
-				mkdirSync(dir);
-				   
-			            res.status(201).json({message:"The registration has been successful, please log in"});
-			       
-			}
-			
-			    
-			},getUser);
+	  /*  var reqUsername = req.body.username;
+	    var reqPassword = req.body.password;
+	    var reqfirstname = req.body.firstname;
+	    var reqlastname = req.body.lastname;
+	    var reqemail = req.body.email;
+	    var reqpassword = req.body.password; */
+	    // Just checking if the username is in our user's array
+	 /*   var theUser = users.filter(function(user){
+	        return user.username === reqUsername;
+	    }); */
+	    var getUser="insert into users(username, password, firstname, lastname) values ('"+req.param("email")+"','" + req.param("password")+"','" + req.param("firstname")+"','" + req.param("lastname")+"')";
+		console.log("Query is:"+getUser);
 		
+		var Ufolder = '../public/uploads/'+req.param("email");
+		const dir = path.join(__dirname,Ufolder);
+		const mkdirSync = function (dirPath) {
+			  try {
+			    fs.mkdirSync(dirPath)
+			  } catch (err) {
+			    if (err.code !== 'EEXIST') throw err
+			  }
+			};
+		mysql.fetchData(function(err,results){
+			if(err){
+				throw err;
+			}
+			else 
+			{
+				
+				console.log("The registration has been successful, please log in");
+					console.log("valid Login");
+					mkdirSync(dir);
+					   
+				            res.status(201).json({message:"The registration has been successful, please log in"});
+				       
+				}
+				
+				    
+				},getUser);
+});
+		
+router.post('/doShare', function (req, res, next) {
+
+			  /*  var reqUsername = req.body.username;
+			    var reqPassword = req.body.password;
+			    var reqfirstname = req.body.firstname;
+			    var reqlastname = req.body.lastname;
+			    var reqemail = req.body.email;
+			    var reqpassword = req.body.password; */
+			    // Just checking if the username is in our user's array
+			 /*   var theUser = users.filter(function(user){
+			        return user.username === reqUsername;
+			    }); */
+var getUser="insert into shareuser(username, foldername) values ('"+req.param("username")+"','" + req.param("folder")+"')";
+				console.log("Query is:"+getUser);
+				var getUser="insert into shareuser(username, foldername) values ('"+req.param("username1")+"','" + req.param("folder")+"')";				
+				
+				mysql.fetchData(function(err,results){
+					if(err){
+						throw err;
+					}
+					else 
+					{
+						
+						
+							console.log("Sharing is successful");
+														   
+						            res.status(201).json({message:"The sharing has been successfull"});
+						       
+						}
+						
+						    
+						},getUser);
+				
     // Check the password
   //  if(theUser.length === 1){
     //    theUser[0].password === reqPassword &&
