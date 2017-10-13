@@ -1,6 +1,6 @@
 //var ejs= require('ejs');
 var mysql = require('mysql');
-
+/*
 //Put your mysql configuration settings - user, password, database and port
 function getConnection(){
 	var connection = mysql.createConnection({
@@ -11,10 +11,10 @@ function getConnection(){
 	    port	 : 3306
 	});
 	return connection;
-}
+}*/
 
 
-function fetchData(callback,sqlQuery){
+/*function fetchData(callback,sqlQuery){
 	
 	console.log("\nSQL Query::"+sqlQuery);
 	
@@ -32,6 +32,16 @@ function fetchData(callback,sqlQuery){
 	});
 	console.log("\nConnection closed..");
 	connection.end();
-}	
+}	*/
 
-exports.fetchData=fetchData;
+//exports.fetchData=fetchData;
+
+var ConPool = mysql.createPool({
+    connectionLimit: 20,
+    host     : 'localhost',
+    user     : 'root',
+    password : 'baby',
+    database : 'sys',
+    port	 : 3306
+})
+module.exports = ConPool;

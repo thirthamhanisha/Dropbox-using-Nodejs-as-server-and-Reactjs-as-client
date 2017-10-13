@@ -168,8 +168,7 @@ class ImageGridList extends Component {
                                         onAfterOpen={this.afterOpenModal}
                                         onRequestClose={this.closeModal}
                                         style={customStyles}
-                                       // contentLabel="Example Modal"
-                                        itemId={this.state.activeItemId}
+                                       itemId={this.state.activeItemId}
                                         itemName={this.state.activeItemName}
                                     >
                                     
@@ -200,7 +199,7 @@ class ImageGridList extends Component {
                                               className="form-control"
                                               type="email"
                                               label="username"
-                                              placeholder="Enter username"
+                                              placeholder="Emails separated (,) comma"
                                               value={this.state.username}
                                               onChange={(event) => {
                                                 this.setState({
@@ -209,20 +208,7 @@ class ImageGridList extends Component {
                                               }}
                                             />   
                                           </div>
-                                            <div className="form-group">
-                                            <input
-                                              className="form-control"
-                                              type="email"
-                                              label="username1"
-                                              placeholder="Enter username to share"
-                                              value={this.state.username1}
-                                              onChange={(event) => {
-                                                this.setState({
-                                                      username1 : event.target.value
-                                                  });
-                                              }}
-                                            />   
-                                          </div>
+                                       
                                         <div className="form-group">
                                         <button
                                             className="btn btn-primary"

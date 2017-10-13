@@ -62,12 +62,17 @@ router.post('/doLogin', function (req, res, next) {
 	 var reqPassword = req.body.password;
 	var getUser="select * from users where username='"+reqUsername+"' and password='" + reqPassword +"'";
 	console.log("Query is:"+getUser);
-	mysql.fetchData(function(err,results){
+	
+	mysql.getConnection(function(err,connect){
 		if(err){
+			connect.release();
 			throw err;
 		}
-		else 
+		connect.query(getUser,function(err,results)
 		{
+			connect.release();
+			
+			if(!err){
 			if(results.length > 0){
 				console.log("valid Login");
 				
@@ -81,12 +86,16 @@ router.post('/doLogin', function (req, res, next) {
 			            res.status(401).json({message: "invalid login"});
 			        
 			}
-		}  
-	},getUser);
-   
+		 }
+		}); 
+
+		connect.on('error', function(err) {
+            throw err;
+            return;
+        });
 
 });
-
+});
 router.get('/download/:filename', function (req, res, next) {
 	var filepath = "./public/uploads/"+req.param("filename");
 	//console.log("test");
@@ -119,7 +128,28 @@ router.post('/doSignup', function (req, res, next) {
 			    if (err.code !== 'EEXIST') throw err
 			  }
 			};
-		mysql.fetchData(function(err,results){
+			
+			mysql.getConnection(function(err,connect){
+		        if (err) {
+		            connect.release();
+		            throw err;
+		        }
+		        connect.query(getUser,function(err,rows){
+		            connect.release();
+		            if(!err) {
+		                console.log("The registration has been successful, please log in");
+		                console.log("valid Login");
+		                mkdirSync(dir);
+
+		                res.status(201).json({message:"The registration has been successful, please log in"});
+		            }
+		        });
+		        connect.on('error', function(err) {
+		            throw err;
+		            return;
+		        });
+		    });
+	/*	mysql.fetchData(function(err,results){
 			if(err){
 				throw err;
 			}
@@ -135,12 +165,14 @@ router.post('/doSignup', function (req, res, next) {
 				}
 				
 				    
-				},getUser);
+				},getUser); */
 });
 		
 router.post('/doShare', function (req, res, next) {
 
-			  /*  var reqUsername = req.body.username;
+	var username = req.body.username;
+    var email = username.split(',');		  
+	/*  var reqUsername = req.body.username;
 			    var reqPassword = req.body.password;
 			    var reqfirstname = req.body.firstname;
 			    var reqlastname = req.body.lastname;
@@ -150,43 +182,94 @@ router.post('/doShare', function (req, res, next) {
 			 /*   var theUser = users.filter(function(user){
 			        return user.username === reqUsername;
 			    }); */
-var getUser="insert into shareuser(username, foldername) values ('"+req.param("username")+"','" + req.param("activeItemName")+"')";
+/*var getUser="insert into shareuser(username, foldername) values ('"+req.param("username")+"','" + req.param("activeItemName")+"')";
 				console.log("Query is:"+getUser);
 	var getUser1="insert into shareuser(username, foldername) values ('"+req.param("username1")+"','" + req.param("activeItemName")+"')";	
 				console.log("Query is:"+getUser);
+				*/
+				mysql.getConnection(function (err, connect) {
+		            if (err) {
+		                connect.release();
+		                throw err;
+		            }
+		            for(i = 0; i < email.length; i++) {
+
+		            	var getUser="insert into shareuser(username, foldername) values ('" + email[i] +"','" + req.param("activeItemName")+"')";
+		            	  
+		            	console.log("Query is:" + getUser);
+
+		                connect.query(getUser);
+		            }
+		            connect.release();
+		                if (!err) {
+		                	if(email.length>0)
+		                		{
+		                    res.status(201).json({message: "Sharing successful"});
+		                		}
+		                	else{
+		                		 res.status(201).json({message: "Sharing unsuccessful"});
+		                	}
+		                }
+		            connect.on('error', function (err) {
+		                throw err;
+		                return;
+		            });
+		        });
 				
-				mysql.fetchData(function(err,results){
+				/*	mysql.getConnection(function(err,connect){
 					if(err){
+						connect.release();
 						throw err;
 					}
-					else 
+					connect.query(getUser,function(err,results) 
 					{
-						
-						
+						connect.release();
+						if(!err)
+							{
+							if(results.length>0)
+							{
 							console.log("Sharing is successful");
 														   
 						            res.status(201).json({message:"The sharing has been successfull"});
 						       
 						}
-						
-						    
-						},getUser);
-				mysql.fetchData(function(err,results){
+							else{
+								res.status(201).json({message:"The sharing is not successfull,please enter username"});
+							}
+							}   
+						});
+					connection.on('error', function(err) {
+			            throw err;
+			            return;
+			        });
+				});
+				mysql.getConnection(function(err,connect){
 					if(err){
+						connect.release();
 						throw err;
 					}
-					else 
+					connect.query(getUser1,function(err,results) 
 					{
-						
-						
+						connect.release();
+						if(!err)
+							{
+							if(results.length>0)
+							{
 							console.log("Sharing is successful");
 														   
 						            res.status(201).json({message:"The sharing has been successfull"});
 						       
 						}
-						
-						    
-						},getUser1);
+							else{
+								res.status(201).json({message:"The sharing is not successfull,please enter username"});
+							}
+							}   
+						});
+					connection.on('error', function(err) {
+			            throw err;
+			            return;
+			        });
+				}); */
 				
     // Check the password
   //  if(theUser.length === 1){
@@ -203,7 +286,9 @@ var getUser="insert into shareuser(username, foldername) values ('"+req.param("u
     // } else {
     //     res.status(401).json({message: "Login failed"});
     // }
-
+				
+				
+				 
 }); 
 router.post('/upload', upload.any(), function (req, res, next) {
     console.log(req.body);
