@@ -9,6 +9,7 @@ import Message from "./Message";
 import Welcome from "./Welcome";
 import Signup from "./Signup";
 import Share from "./Share";
+import NewerHomePage from "./NewerHomePage";
 import * as API from '../api/API';
 import {Link} from 'react-router-dom';
 
@@ -51,15 +52,16 @@ const customStyles = {
 	    }
 	};
 class ImageGridList extends Component {
-	
-	
+
 	  static propTypes = {
-	        handleShare: PropTypes.func.isRequired,
+		 //   handleShare: PropTypes.func.isRequired,
 	        classes: PropTypes.object.isRequired,
 	        items: PropTypes.array.isRequired,
 	    };
 
-	
+	    
+	  
+	  
 	constructor() {
         super();
 
@@ -67,20 +69,49 @@ class ImageGridList extends Component {
             modalIsOpen: false,
             activeItemName: '',
             activeItemId: null,
-            username: ''
+            username: '',
+            username1:''
         };
 
         this.openModal = this.openModal.bind(this);
     //    this.afterOpenModal = this.afterOpenModal.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.handleShare = this.handleShare.bind(this);
     }
+	
+	
+	
+	handleShare = (userdata) => {
+        API.doShare(userdata)
+            .then((status) => {
+                if (status === 201) {
+                    this.setState({
+                        modalIsOpen: true,
+                        message: "Share succesful",
+                        username: userdata.username,
+                        username1:userdata.username1,
+                        activeItemId: userdata.activeItemId
+                    //    activeItemName: userdata.activeItemNames
+                    });
+                //    this.props.history.push("/message");
+                } else if (status === 401) {
+                    this.setState({
+                        isLoggedIn: false,
+                        message: "Enter valid information. Try again..!!"
+                    });
+                }
+            });
+    };
+  
+
 
     openModal(item) {
         this.setState({
             modalIsOpen: true,
             activeItemName: item,
             activeItemId: item.id,
-            username:''
+            username:'',
+            username1:''
             
         });
     }
@@ -90,7 +121,8 @@ class ImageGridList extends Component {
         	modalIsOpen: false,
             activeItemName: '',
             activeItemId: null,
-            username:''
+            username:'',
+            username1:''
             
         });
     }
@@ -150,39 +182,57 @@ class ImageGridList extends Component {
                                         
                                         <form>
                                         
-                                        <div className="form-group">
-                                        <input
-                                            className="form-control"
-                                            type="text"
-                                            label="activeItemName"
-                                            value={this.state.activeItemName}
-                                            onChange={(event) => {
+                                          <div className="form-group">
+                                            <input
+                                              className="form-control"
+                                              type="text"
+                                              label="activeItemName"
+                                              value={this.state.activeItemName}
+                                              onChange={(event) => {
                                                 this.setState({
-                                                    activeItemName : event.target.value
+                                                    activeItemName : this.state.activeItemName
                                                 });
-                                            }}
-                                        />   
-                                        </div>
-                                        <div className="form-group">
-                                        <input
-                                            className="form-control"
-                                            type="email"
-                                            label="username"
-                                            placeholder="Enter username"
-                                            value={this.state.username}
-                                            onChange={(event) => {
+                                              }}
+                                            />   
+                                          </div>
+                                          <div className="form-group">
+                                            <input
+                                              className="form-control"
+                                              type="email"
+                                              label="username"
+                                              placeholder="Enter username"
+                                              value={this.state.username}
+                                              onChange={(event) => {
                                                 this.setState({
-                                                    username : event.target.value
-                                                });
-                                            }}
-                                        />   
-                                        </div>
-                                        <button 
-                                        type="button"
-                                            onClick={() => this.props.handleShare(this.state)
-                                            }>
-                                            
-                                        sharenow</button>
+                                                      username : event.target.value
+                                                  });
+                                              }}
+                                            />   
+                                          </div>
+                                            <div className="form-group">
+                                            <input
+                                              className="form-control"
+                                              type="email"
+                                              label="username1"
+                                              placeholder="Enter username to share"
+                                              value={this.state.username1}
+                                              onChange={(event) => {
+                                                this.setState({
+                                                      username1 : event.target.value
+                                                  });
+                                              }}
+                                            />   
+                                          </div>
+                                        <div className="form-group">
+                                        <button
+                                            className="btn btn-primary"
+                                            type="button"
+                                            onClick={() => this.handleShare(this.state)}>
+                                            shareNow
+                                        </button>
+                                    </div>
+                                        
+
                                             
                                         </form>
                                         

@@ -38,25 +38,7 @@ class NewerHomePage extends Component {
             });
     };
     
-    handleShare = (userdata) => {
-        API.doShare(userdata)
-            .then((status) => {
-                if (status === 201) {
-                    this.setState({
-                        isLoggedIn: true,
-                        message: "Share succesful",
-                        username: userdata.username,
-                    //    activeItemName: userdata.activeItemNames
-                    });
-                    this.props.history.push("/welcome");
-                } else if (status === 401) {
-                    this.setState({
-                        isLoggedIn: false,
-                        message: "Enter valid information. Try again..!!"
-                    });
-                }
-            });
-    };
+
     
     handleSignUp = (userdata) => {
         API.doSignup(userdata)
@@ -76,15 +58,17 @@ class NewerHomePage extends Component {
                 }
             });
     };
+    
 
     render() {
         return (
             <div className="container-fluid">
-                <Route exact path="/" render={() => (
-                		
-                		
-                		<div>
-                		    
+            <div className="col-md-8">
+              <img src="./../public/dropbox-logo1.jpeg"/>
+           </div>
+                <Route exact path="/" render={() => (             		
+                		               	            		
+                		<div>             		    
                 		   
                     
                     <Login handleSubmit={this.handleSubmit}/>

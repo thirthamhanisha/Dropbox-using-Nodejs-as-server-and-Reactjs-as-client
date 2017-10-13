@@ -77,7 +77,8 @@ class Share extends Component {
                             <button
                                 className="btn btn-primary"
                                 type="button"
-                                onClick={() => this.props.handleShare(this.state)}>
+                            //    onClick={() => this.props.handleShare(this.state)}
+                                	>
                                 share
                             </button>
                         </div>

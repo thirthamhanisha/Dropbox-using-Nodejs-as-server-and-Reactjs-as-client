@@ -150,9 +150,10 @@ router.post('/doShare', function (req, res, next) {
 			 /*   var theUser = users.filter(function(user){
 			        return user.username === reqUsername;
 			    }); */
-var getUser="insert into shareuser(username, foldername) values ('"+req.param("username")+"','" + req.param("folder")+"')";
+var getUser="insert into shareuser(username, foldername) values ('"+req.param("username")+"','" + req.param("activeItemName")+"')";
 				console.log("Query is:"+getUser);
-				var getUser="insert into shareuser(username, foldername) values ('"+req.param("username1")+"','" + req.param("folder")+"')";				
+	var getUser1="insert into shareuser(username, foldername) values ('"+req.param("username1")+"','" + req.param("activeItemName")+"')";	
+				console.log("Query is:"+getUser);
 				
 				mysql.fetchData(function(err,results){
 					if(err){
@@ -170,6 +171,22 @@ var getUser="insert into shareuser(username, foldername) values ('"+req.param("u
 						
 						    
 						},getUser);
+				mysql.fetchData(function(err,results){
+					if(err){
+						throw err;
+					}
+					else 
+					{
+						
+						
+							console.log("Sharing is successful");
+														   
+						            res.status(201).json({message:"The sharing has been successfull"});
+						       
+						}
+						
+						    
+						},getUser1);
 				
     // Check the password
   //  if(theUser.length === 1){
