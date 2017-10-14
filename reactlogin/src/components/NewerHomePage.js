@@ -5,7 +5,7 @@ import Login from "./Login";
 import Message from "./Message";
 import Welcome from "./Welcome";
 import Signup from "./Signup";
-import Share from "./Share";
+
 import ImageGridList from "./ImageGridList";
 
 class NewerHomePage extends Component {
@@ -50,6 +50,7 @@ class NewerHomePage extends Component {
                         username: userdata.username
                     });
                     this.props.history.push("/login");
+                 
                 } else if (status === 401) {
                     this.setState({
                         isLoggedIn: false,
@@ -90,7 +91,9 @@ class NewerHomePage extends Component {
                 <Route exact path="/login" render={() => (
                     <div>
                         <Login handleSubmit={this.handleSubmit}/>
+                        
                         <Message message={this.state.message}/>
+                        	
                     </div>
                 )}/>
                <Route exact path="/imagegridlist" render={() => (

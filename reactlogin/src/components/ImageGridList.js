@@ -1,17 +1,10 @@
 import Modal from 'react-modal';
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Route, withRouter } from 'react-router-dom';
 import {withStyles} from 'material-ui/styles';
 import {GridList, GridListTile} from 'material-ui/GridList';
-import Login from "./Login";
-import Message from "./Message";
-import Welcome from "./Welcome";
-import Signup from "./Signup";
-import Share from "./Share";
-import NewerHomePage from "./NewerHomePage";
 import * as API from '../api/API';
-import {Link} from 'react-router-dom';
+
 
 const styles = theme => ({
     root: {

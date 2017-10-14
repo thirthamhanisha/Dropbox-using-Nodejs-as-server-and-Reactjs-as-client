@@ -11,7 +11,8 @@ class Signup extends Component {
         firstname: '',
         lastname: '',
         email: '',
-        password: ''
+        password: '',
+        password1: ''
         
               
     };
@@ -21,7 +22,7 @@ class Signup extends Component {
         	firstname: '',
             lastname: '',
             email: '',
-            password: ''
+            password: '', password1: ''
             
         });
     }
@@ -88,6 +89,20 @@ class Signup extends Component {
                             onChange={(event) => {
                                 this.setState({
                                     password: event.target.value
+                                });
+                            }}
+                        />
+                    </div>
+                        <div className="form-group">
+                        <input
+                            className="form-control"
+                            type="password"
+                            label="password1"
+                            placeholder="Reconfirm Password"
+                            value={this.state.password1}
+                            onChange={(event) => {
+                                this.setState({
+                                    password1: event.target.value
                                 });
                             }}
                         />

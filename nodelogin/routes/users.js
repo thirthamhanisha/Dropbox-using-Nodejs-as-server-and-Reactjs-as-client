@@ -6,10 +6,14 @@ var multer = require('multer');
 var glob = require('glob');
 var path = require('path');
 const fs = require('fs');
+//var auth = require('passport-local-authenticate');
+//var bcrypt = require('bcrypt-nodejs')
+var bcrypt = require('bcrypt');
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, './public/uploads/')
+        cb(null, './public/uploads')
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname)
@@ -18,6 +22,20 @@ var storage = multer.diskStorage({
 
 var upload = multer({storage:storage});
 
+function hashP(getit, cb){  //salt and hash for encrytion for password
+    bcrypt.genSalt(15, function (err, salt){
+        if(err) {
+            return cb(err, null);
+        }
+        bcrypt.hash(getit, salt, function (err, hash){
+            if(err) {
+                return cb(err, null);
+            }
+            return cb(null, hash);
+        })
+    })
+}
+
 /* GET users listing. */
 /*router.get('/', function (req, res, next) {
     res.send('respond with a resource');
@@ -25,10 +43,60 @@ var upload = multer({storage:storage});
 
 router.get('/', function (req, res, next) {
     var resArr = [];
-
-    glob("public/uploads/*", function (er, files) {
+//   console.log(req.body.username);
+   glob("public/uploads/*", function (er, files) {
 
         var resArr = files.map(function (file) {
+            var imgJSON = {};
+            imgJSON = file.split('/')[2];
+            imgJSON.cols = 2  ;
+            return imgJSON;
+        }); 
+
+        console.log(resArr);
+        res.status(201).send(resArr);
+   }); 
+	/*
+	var response = "";
+	testFolder = "../public/uploads";
+	console.log(testFolder);
+	fs.readdir(testFolder, function (err, files) 
+	{
+		console.log(files.length);
+		console.log(files);
+		for(var i=0;i<files.length;i++)
+		{
+			response += files[i]+"<br>";
+		}
+		res.status(200).send(response);
+	}); */
+
+}); 
+
+router.get('/doGetUser', function (req, res, next) {
+    var resArr = [];
+   console.log(req.body.username);
+   glob("public/uploads/*", function (er, files) {
+
+        var resArr = files.map(function (file) {
+            var imgJSON = {};
+            imgJSON = file.split('/')[2];
+            imgJSON.cols = 2  ;
+            return imgJSON;
+        }); 
+
+        console.log(resArr);
+        res.status(201).send(resArr);
+   }); 
+});
+
+router.post('/doGetUser', function (req, res, next) {
+    var resArr = [];
+   console.log(req.body.username);
+   console.log("public/uploads/" + req.body.username+ "/*");
+   var pathtoFiles ="public/uploads/"+req.body.username+"/*";
+    glob(pathtoFiles, function (er, files) {
+    	 var resArr = files.map(function (file) {
             var imgJSON = {};
             imgJSON = file.split('/')[2];
             imgJSON.cols = 2  ;
@@ -55,12 +123,15 @@ router.get('/', function (req, res, next) {
 
 }); 
 
-
 router.post('/doLogin', function (req, res, next) {
 	console.log("i am here");
+	//console.log(req);
 	 var reqUsername = req.body.username;
 	 var reqPassword = req.body.password;
-	var getUser="select * from users where username='"+reqUsername+"' and password='" + reqPassword +"'";
+	 console.log(reqPassword);
+	 
+	 
+	var getUser="select * from users where username='"+reqUsername+"' and password1='" + reqPassword +"'";
 	console.log("Query is:"+getUser);
 	
 	mysql.getConnection(function(err,connect){
@@ -98,27 +169,34 @@ router.post('/doLogin', function (req, res, next) {
 });
 router.get('/download/:filename', function (req, res, next) {
 	var filepath = "./public/uploads/"+req.param("filename");
-	//console.log("test");
-	//console.log(req.param("filename"));
+	
      res.download(filepath);
 
 });
 
 router.post('/doSignup', function (req, res, next) {
 
-	  /*  var reqUsername = req.body.username;
-	    var reqPassword = req.body.password;
-	    var reqfirstname = req.body.firstname;
-	    var reqlastname = req.body.lastname;
-	    var reqemail = req.body.email;
+	  // var reqUsername = req.body.username;
+	   
+	var data = {
+			username: req.body.email,
+			password: req.body.password,
+			password1: req.body.password1,
+	
+	     firstname: req.body.firstname,
+	     lastname: req.body.lastname
+         }
+	/*    var reqemail = req.body.email;
 	    var reqpassword = req.body.password; */
 	    // Just checking if the username is in our user's array
 	 /*   var theUser = users.filter(function(user){
 	        return user.username === reqUsername;
 	    }); */
-	    var getUser="insert into users(username, password, firstname, lastname) values ('"+req.param("email")+"','" + req.param("password")+"','" + req.param("firstname")+"','" + req.param("lastname")+"')";
-		console.log("Query is:"+getUser);
+	    
+	//    var getUser="insert into users(username, password, firstname, lastname) values ('"+req.param("email")+"','" + req.param("password") +"','" + req.param("firstname")+"','" + req.param("lastname")+"')";
+	//	console.log("Query is:"+getUser);
 		
+
 		var Ufolder = '../public/uploads/'+req.param("email");
 		const dir = path.join(__dirname,Ufolder);
 		const mkdirSync = function (dirPath) {
@@ -128,14 +206,26 @@ router.post('/doSignup', function (req, res, next) {
 			    if (err.code !== 'EEXIST') throw err
 			  }
 			};
-			
+		/*	hashP(data.reqPassword, function (err, hash) {
+			      if (err) throw err;
+			      data.reqPassword = hash;
+			      // NOW, SAVE THE VALUE AT DB
+			      con.query("insert into users ?", [data], function (err, rows) {
+			        if (err) throw err;
+			        res.send("Value has bee inserted");
+			    })
+			}); */
 			mysql.getConnection(function(err,connect){
 		        if (err) {
 		            connect.release();
 		            throw err;
 		        }
-		        connect.query(getUser,function(err,rows){
+		        hashP(data.password, function (err, hash) {
+				      if (err) throw err;
+				      data.password = hash;
+		       var query = connect.query("insert into users set ?",[data],function(err,rows){
 		            connect.release();
+		          //  console.log(query.sql);
 		            if(!err) {
 		                console.log("The registration has been successful, please log in");
 		                console.log("valid Login");
@@ -143,6 +233,11 @@ router.post('/doSignup', function (req, res, next) {
 
 		                res.status(201).json({message:"The registration has been successful, please log in"});
 		            }
+		            else{
+		            	console.log(query.sql);
+		            	console.log("registration unsuccessful");
+		            }
+		        })
 		        });
 		        connect.on('error', function(err) {
 		            throw err;

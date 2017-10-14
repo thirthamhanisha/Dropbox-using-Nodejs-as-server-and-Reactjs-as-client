@@ -19,6 +19,23 @@ export const doLogin = (payload) =>
             console.log("This is error");
             return error;
         });
+    
+    
+    export const doGetUser = (payload) =>
+    fetch(`${api}/users/doGetUser`, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+    }).then(res => {
+        return res.status;
+    })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
 export const doSignup = (payload) =>
     fetch(`${api}/users/doSignup`, {
         method: 'POST',
@@ -53,6 +70,16 @@ export const doSignup = (payload) =>
     
  export const getImages = () =>
     fetch(`${api}/files/`)
+        .then(res => res.json())
+        .catch(error => {
+            console.log("This is error.");
+            return error;
+        });
+    
+    export const getFiles = (payload) =>
+    fetch(`${api}/files/doGetUser`, {
+    	 body: JSON.stringify(payload)
+    })
         .then(res => res.json())
         .catch(error => {
             console.log("This is error.");
