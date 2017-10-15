@@ -6,10 +6,11 @@ var multer = require('multer');
 var glob = require('glob');
 var path = require('path');
 const fs = require('fs');
+const fse = require('fs-extra');
 //var auth = require('passport-local-authenticate');
 //var bcrypt = require('bcrypt-nodejs')
 var bcrypt = require('bcrypt');
-
+var crypto = require('crypto');
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -135,18 +136,27 @@ router.post('/doLogin', function (req, res, next) {
 	//console.log(req);
 	 var reqUsername = req.body.username;
 	 var reqPassword = req.body.password;
+	 var key =  req.body.username;
 	 console.log(reqPassword);
 	 
 	 
-	var getUser="select * from users where username='"+reqUsername+"' and password1='" + reqPassword +"'";
-	console.log("Query is:"+getUser);
+	/*var getUser="select * from users where username='"+reqUsername+"' and password1='" + reqPassword +"'";
+	console.log("Query is:"+getUser);*/
 	
 	mysql.getConnection(function(err,connect){
 		if(err){
 			connect.release();
 			throw err;
 		}
-		connect.query(getUser,function(err,results)
+		/*hashP(reqPassword, function (err, hash) {
+		      if (err) throw err;
+		      reqPassword = hash;
+     var query = connect.query("select * from users where username='"+reqUsername+"' and password='" + reqPassword +"'",function(err,results){
+          connect.release();*/
+		  var hash = crypto.createHmac('sha512', key);
+	        hash.update(reqPassword);
+	         reqPassword = hash.digest('hex');
+	var query =	connect.query("select * from users where username='"+reqUsername+"' and password='" + reqPassword +"'",function(err,results)
 		{
 			connect.release();
 			
@@ -160,7 +170,7 @@ router.post('/doLogin', function (req, res, next) {
 			else {    
 				
 				console.log("Invalid Login");
-				
+				 console.log(query.sql);
 			            res.status(401).json({message: "invalid login"});
 			        
 			}
@@ -174,6 +184,7 @@ router.post('/doLogin', function (req, res, next) {
 
 });
 });
+
 router.get('/download/:filename', function (req, res, next) {
 	var filepath = "./public/uploads/"+req.param("filename");
 	
@@ -185,6 +196,8 @@ router.post('/doSignup', function (req, res, next) {
 
 	  // var reqUsername = req.body.username;
 	   
+	var key =  req.body.email;	
+	
 	var data = {
 			username: req.body.email,
 			password: req.body.password,
@@ -227,9 +240,12 @@ router.post('/doSignup', function (req, res, next) {
 		            connect.release();
 		            throw err;
 		        }
-		        hashP(data.password, function (err, hash) {
+		       /* hashP(data.password, function (err, hash) {
 				      if (err) throw err;
-				      data.password = hash;
+				      data.password = hash;*/
+		        var hash = crypto.createHmac('sha512', key);
+		        hash.update(data.password);
+		        data.password = hash.digest('hex');
 		       var query = connect.query("insert into users set ?",[data],function(err,rows){
 		            connect.release();
 		          //  console.log(query.sql);
@@ -245,7 +261,7 @@ router.post('/doSignup', function (req, res, next) {
 		            	console.log("registration unsuccessful");
 		            }
 		        })
-		        });
+		     //   });
 		        connect.on('error', function(err) {
 		            throw err;
 		            return;
@@ -395,9 +411,41 @@ router.post('/doShare', function (req, res, next) {
 router.post('/upload', upload.any(), function (req, res, next) {
     console.log(req.body);
     console.log(req.file);
- //   var body1 = req.body;
+    var resArr = [];
+    var body1 = req.body.username;
+    console.log("public/uploads/" + req.body.username+ "/*");
+    var pathtoFiles ="public/uploads/*";
+    
+   // if (pathtoFiles !== "public/uploads//*")
+  //	  {
+  glob(pathtoFiles, function (er, files) {
+  	 var resArr = files.map(function (file) {
+          var imgJSON = {};
+          imgJSON = file.split('/')[2];
+          imgJSON.cols = 2  ;
+          return imgJSON;
+      });
+
+     // console.log('recent files':resArr[0]);
+      for (i=0; i< resArr.length; i++)
+    	  {
+    	  if(resArr[i].search(".com") === -1){
+    		  
+    var homefolder = 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/'+ resArr[0];
+    var userfolder= 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/' + req.body.username + '/' + resArr[i];
+    	fse.move(homefolder, userfolder, function(err)  {
+    		if(err){
+    			return console.error(err)    		
+    		}
+    	})
+    	break;
+    	  } 
+    	 }
+    
+  }); 
+res.status(201).json({username: body1}); 
   //  res.status(201).send(body1);
-    res.status(201).end();
+   // res.status(201).end();
 });
 
 module.exports = router;

@@ -16,28 +16,28 @@ class Welcome extends Component {
 	        const payload = new FormData();
 	     //   var username = this.props.username;
 	        payload.append( 'mypic',event.target.files[0]);
-	     //   payload.append( username, event.target.files[0]);
+	        payload.append( 'username', this.props.username);
 	               
 	    
 	        API.uploadFile(payload)
 	            .then((status) => {
 	                if (status === 201) {
-	                	/*API.doGetUser(username)
+	                	API.doGetUser(status.username)
 	     	           // .then((status) => {
 	     	            //    if (status === 201) {
 	     	               // 	API.getFiles()
 	                             .then((data) => {
 	                                 this.setState({
 	                                     images: data,
-	                                     username: username
+	                                     username: status.username
 	                                 });
-	                             })*/
-	                    API.getImages()
+	                             })
+	                    /*API.getImages()
 	                        .then((data) => {
 	                            this.setState({
 	                                images: data
 	                            });
-	                        });
+	                        });*/
 	                }
 	            });
 
@@ -121,7 +121,13 @@ class Welcome extends Component {
             }
         }); */
     } 
-
+componentWillReceiveProps(nextProps){
+	if(this.props.username !== nextProps.username){
+		this.setState({
+			username: this.props.username
+		})
+	}
+};
     componentDidMount(){
     //	username: this.props.username;
         document.title = `Welcome, ${this.state.username} !!`;

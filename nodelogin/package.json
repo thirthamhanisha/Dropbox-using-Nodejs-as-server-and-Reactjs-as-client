@@ -7,6 +7,7 @@
     "test": "mocha"
   },
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "~1.17.1",
     "chai": "^4.1.2",
     "cookie-parser": "~1.4.3",
@@ -14,6 +15,8 @@
     "debug": "~2.6.3",
     "express": "~4.15.2",
     "file-system": "^2.2.2",
+    "fs": "0.0.1-security",
+    "fs-extra": "^4.0.2",
     "jade": "~1.11.0",
     "mocha": "^4.0.1",
     "morgan": "~1.8.1",
