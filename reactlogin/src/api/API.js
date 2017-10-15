@@ -1,5 +1,6 @@
 const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://localhost:3001'
 
+
 const headers = {
     'Accept': 'application/json'
 };
@@ -29,13 +30,30 @@ export const doLogin = (payload) =>
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
-    }).then(res => {
-        return res.status;
-    })
+    }).then(res => res.json())
+    		
+    
         .catch(error => {
             console.log("This is error");
             return error;
         });
+         
+ /*   export const doGetUser = (uname) =>
+    axios.post(api + '/users/doGetUser', {uname:uname})
+    .then(res => {
+    	if(res.data.length!==0)
+    		{
+    		var array = res.data.split(',');
+    		array.length = array.length-1;
+    		console.log(array);
+    		return array;
+    		}
+    })
+    .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+    		*/
 export const doSignup = (payload) =>
     fetch(`${api}/users/doSignup`, {
         method: 'POST',

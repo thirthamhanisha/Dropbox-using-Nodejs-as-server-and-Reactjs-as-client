@@ -1,9 +1,11 @@
 import React, {Component} from 'react';
 import {Link,withRouter} from 'react-router-dom';
+import { Route} from 'react-router-dom';
 import PropTypes from 'prop-types';
 //import '/App.css';
 import * as API from '../api/API';
 import ImageGridList from "./ImageGridList";
+import UserProfile from "./userprofile";
 import TextField from 'material-ui/TextField';
 import Typography from 'material-ui/Typography';
 
@@ -14,16 +16,28 @@ class Welcome extends Component {
 	        const payload = new FormData();
 
 	        payload.append('mypic', event.target.files[0]);
+	        
+	       var username = this.props.username;
 
 	        API.uploadFile(payload)
 	            .then((status) => {
 	                if (status === 204) {
-	                    API.getImages()
+	                	API.doGetUser(username)
+	     	           // .then((status) => {
+	     	            //    if (status === 201) {
+	     	               // 	API.getFiles()
+	                             .then((data) => {
+	                                 this.setState({
+	                                     images: data,
+	                                     username: username
+	                                 });
+	                             })
+	                    /*API.getImages()
 	                        .then((data) => {
 	                            this.setState({
 	                                images: data
 	                            });
-	                        });
+	                        });*/
 	                }
 	            });
 
@@ -33,19 +47,19 @@ class Welcome extends Component {
 	    handleFileUser = (userdata) => {    	
 	    	    	
 	        API.doGetUser(userdata)
-	            .then((status) => {
-	                if (status === 201) {
-	                	API.getFiles()
+	           // .then((status) => {
+	            //    if (status === 201) {
+	               // 	API.getFiles()
                         .then((data) => {
                             this.setState({
                                 images: data
                             });
-                        });
-                }
+                        })
+                };
             
-	            });
+	            
 
-    };
+    
 	    
 	    
 	    
@@ -71,9 +85,24 @@ class Welcome extends Component {
             username : this.props.username       
             
             
-        }); 
-        
-        
+        });
+        API.getImages()
+        .then((data) => {
+            console.log(data);
+            this.setState({
+                images: data
+            });
+        });
+       /* API.doGetUser(this.state)
+        // .then((status) => {
+         //    if (status === 201) {
+            // 	API.getFiles()
+                 .then((data) => {
+                     this.setState({
+                         images: data
+                     });
+                 })*/
+    //    this.handleFileUser(this.state);
         //document.title = `Welcome, ${this.state.username} !!`;
      /*   API.doGetUser(this.state)
         .then((status) => {
@@ -130,6 +159,7 @@ class Welcome extends Component {
                 <div className="col-md-12">
                     <div className="alert alert-warning" role="alert">
                         {this.state.username}, welcome to my App..!!
+                        <Link to = "/userprofile">     Click here for User profile</Link>
                     </div>                        
                         
                         <Typography
@@ -149,7 +179,12 @@ class Welcome extends Component {
                     
                     
                 </div>
-                    
+                <Route exact path="/userprofile" render={() => (
+                        <div>
+                            <UserProfile handleSignUp={this.handleSignUp}/>
+                            
+                        </div>
+                    )}/> 
                     <Link to="/login">Logout</Link>
                 </div>
             </div>

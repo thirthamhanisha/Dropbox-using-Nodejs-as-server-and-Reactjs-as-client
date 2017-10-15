@@ -5,6 +5,7 @@ import Login from "./Login";
 import Message from "./Message";
 import Welcome from "./Welcome";
 import Signup from "./Signup";
+import UserProfile from "./userprofile";
 
 import ImageGridList from "./ImageGridList";
 
@@ -96,6 +97,12 @@ class NewerHomePage extends Component {
                         	
                     </div>
                 )}/>
+                <Route exact path="/userprofile" render={() => (
+                        <div>
+                            <UserProfile handleSignUp={this.handleSignUp} route1={this.props.history.push}/>
+                            
+                        </div>
+                    )}/> 
                <Route exact path="/imagegridlist" render={() => (
                         <div>
                             <ImageGridList handleShare={this.handleShare}/>

@@ -22,12 +22,12 @@ var storage = multer.diskStorage({
 
 var upload = multer({storage:storage});
 
-function hashP(getit, cb){  //salt and hash for encrytion for password
+function hashP(pwd, cb){  //salt and hash for encrytion 
     bcrypt.genSalt(15, function (err, salt){
         if(err) {
             return cb(err, null);
         }
-        bcrypt.hash(getit, salt, function (err, hash){
+        bcrypt.hash(pwd, salt, function (err, hash){
             if(err) {
                 return cb(err, null);
             }
@@ -80,6 +80,7 @@ router.get('/doGetUser', function (req, res, next) {
 
         var resArr = files.map(function (file) {
             var imgJSON = {};
+            console.log(file);
             imgJSON = file.split('/')[2];
             imgJSON.cols = 2  ;
             return imgJSON;
@@ -90,15 +91,19 @@ router.get('/doGetUser', function (req, res, next) {
    }); 
 });
 
+
+
 router.post('/doGetUser', function (req, res, next) {
     var resArr = [];
    console.log(req.body.username);
    console.log("public/uploads/" + req.body.username+ "/*");
-   var pathtoFiles ="public/uploads/"+req.body.username+"/*";
+      var pathtoFiles ="public/uploads/"+req.body.username+"/*";
+      if (pathtoFiles !== "public/uploads//*")
+    	  {
     glob(pathtoFiles, function (er, files) {
     	 var resArr = files.map(function (file) {
             var imgJSON = {};
-            imgJSON = file.split('/')[2];
+            imgJSON = file.split('/')[3];
             imgJSON.cols = 2  ;
             return imgJSON;
         });
@@ -106,6 +111,7 @@ router.post('/doGetUser', function (req, res, next) {
         console.log(resArr);
         res.status(201).send(resArr);
     }); 
+    	  }
 	/*
 	var response = "";
 	testFolder = "../public/uploads";
