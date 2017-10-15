@@ -98,6 +98,7 @@ router.post('/doGetUser', function (req, res, next) {
    console.log(req.body.username);
    console.log("public/uploads/" + req.body.username+ "/*");
       var pathtoFiles ="public/uploads/"+req.body.username+"/*";
+      
       if (pathtoFiles !== "public/uploads//*")
     	  {
     glob(pathtoFiles, function (er, files) {
@@ -394,6 +395,8 @@ router.post('/doShare', function (req, res, next) {
 router.post('/upload', upload.any(), function (req, res, next) {
     console.log(req.body);
     console.log(req.file);
+ //   var body1 = req.body;
+  //  res.status(201).send(body1);
     res.status(201).end();
 });
 
