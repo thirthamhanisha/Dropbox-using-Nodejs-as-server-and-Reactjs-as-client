@@ -14,15 +14,15 @@ class Welcome extends Component {
 	 handleFileUpload = (event) => {
 
 	        const payload = new FormData();
-
-	        payload.append('mypic', event.target.files[0]);
-	        
-	       var username = this.props.username;
-
+	        var username = this.props.username;
+	        payload.append( 'mypic',event.target.files[0]);
+	  //      payload.append( p, event.target.files[0]);
+	               
+	    
 	        API.uploadFile(payload)
 	            .then((status) => {
 	                if (status === 204) {
-	                	API.doGetUser(username)
+	                	/*API.doGetUser(username)
 	     	           // .then((status) => {
 	     	            //    if (status === 201) {
 	     	               // 	API.getFiles()
@@ -31,13 +31,13 @@ class Welcome extends Component {
 	                                     images: data,
 	                                     username: username
 	                                 });
-	                             })
-	                    /*API.getImages()
+	                             })*/
+	                    API.getImages()
 	                        .then((data) => {
 	                            this.setState({
 	                                images: data
 	                            });
-	                        });*/
+	                        });
 	                }
 	            });
 
