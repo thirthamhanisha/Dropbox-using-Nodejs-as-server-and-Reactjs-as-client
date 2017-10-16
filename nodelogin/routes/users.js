@@ -283,8 +283,9 @@ router.post('/doShare', function (req, res, next) {
 	var username = req.body.username;
 	var shareuser = req.body.username1;
     var usernames = shareuser.split(',');
-    var userfolder = 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/' + req.body.username + '/' + req.body.activeItemName;
-	var sharetouser ;
+ //   var userfolder = 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/' + req.body.username + '/' + req.body.activeItemName;
+	var userfolder = path.join(__dirname,'..','public','uploads',req.body.username,req.body.activeItemName);
+    var sharetouser ;
 	console.log(userfolder);
 /*var getUser="insert into shareuser(username, foldername) values ('"+req.param("username")+"','" + req.param("activeItemName")+"')";
 				console.log("Query is:"+getUser);
@@ -297,7 +298,8 @@ router.post('/doShare', function (req, res, next) {
 		                throw err;
 		            }
 		            for(i = 0; i < usernames.length; i++) {
-                       sharetouser = 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/' + usernames[i] + '/' + req.body.activeItemName;
+                     //  sharetouser = 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/' + usernames[i] + '/' + req.body.activeItemName;
+		            	sharetouser = path.join(__dirname,'..','public', 'uploads',usernames[i], req.body.activeItemName);
 		            	var getUser="insert into shareuser(username, foldername) values ('" + usernames[i] +"','" + req.param("activeItemName")+"')";
 		            	console.log(sharetouser)  ;
 		            	console.log("Query is:" + getUser);
@@ -422,9 +424,14 @@ router.post('/upload', upload.any(), function (req, res, next) {
     	  {
     	  if(resArr[i].search(".com") === -1){
     		  
-    var homefolder = 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/'+ resArr[0];
-    var userfolder= 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/' + req.body.username + '/' + resArr[i];
-    	fse.move(homefolder, userfolder, function(err)  {
+    /*var homefolder = 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/'+ resArr[0];
+    var userfolder= 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/' + req.body.username + '/' + resArr[i];*/
+    	
+    var homefolder = path.join(__dirname,'..','public','uploads', resArr[i]);
+    console.log(homefolder);
+    var userfolder= path.join(__dirname,'..','public','uploads', req.body.username, resArr[i]);
+    console.log(userfolder);
+    fse.move(homefolder, userfolder, function(err)  {
     		if(err){
     			return console.error(err)    		
     		}
