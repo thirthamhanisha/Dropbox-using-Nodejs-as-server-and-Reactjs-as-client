@@ -180,7 +180,7 @@ componentWillReceiveProps(nextProps){
                         name="mypic"
                         onChange={this.handleFileUpload}
                     />
-                    <ImageGridList items={this.state.images} route={this.props.route}/>
+                    <ImageGridList items={this.state.images} route={this.props.route} username={this.state.username}/>
                     <div className="form-group" >                                       
                     
                     

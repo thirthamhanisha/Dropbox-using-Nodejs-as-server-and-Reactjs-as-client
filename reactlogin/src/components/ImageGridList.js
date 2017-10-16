@@ -50,6 +50,7 @@ class ImageGridList extends Component {
 		 //   handleShare: PropTypes.func.isRequired,
 	        classes: PropTypes.object.isRequired,
 	        items: PropTypes.array.isRequired,
+	        username: PropTypes.string.isRequired,
 	    };
 
 	    
@@ -103,7 +104,7 @@ class ImageGridList extends Component {
             modalIsOpen: true,
             activeItemName: item,
             activeItemId: item.id,
-            username:'',
+            username: this.props.username,
             username1:''
             
         });
@@ -120,10 +121,7 @@ class ImageGridList extends Component {
         });
     }
 
-  /*  afterOpenModal() {
-        
-        this.subtitle.style.color = '#f00';
-    } */
+  
 
     closeModal() {
         this.setState({modalIsOpen: false});
@@ -151,7 +149,7 @@ class ImageGridList extends Component {
                             		
                                     <div>
                                       
-                                    <a href= {'http://localhost:3001/files/download/'+tile} download>{tile} </a> 
+                                    <a href= {'http://localhost:3001/files/download/'+ this.props.username+'/'+tile} download>{tile} </a> 
                                       
                                     <button onClick={() => this.openModal(tile)}>Share</button>
 
@@ -197,6 +195,20 @@ class ImageGridList extends Component {
                                               onChange={(event) => {
                                                 this.setState({
                                                       username : event.target.value
+                                                  });
+                                              }}
+                                            />   
+                                          </div>
+                                            <div className="form-group">
+                                            <input
+                                              className="form-control"
+                                              type="email"
+                                              label="username"
+                                              placeholder="Emails separated (,) comma"
+                                              value={this.state.username1}
+                                              onChange={(event) => {
+                                                this.setState({
+                                                      username1 : event.target.value
                                                   });
                                               }}
                                             />   

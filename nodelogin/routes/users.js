@@ -23,7 +23,7 @@ var storage = multer.diskStorage({
 
 var upload = multer({storage:storage});
 
-function hashP(pwd, cb){  //salt and hash for encrytion 
+/*function hashP(pwd, cb){  //salt and hash for encrytion 
     bcrypt.genSalt(15, function (err, salt){
         if(err) {
             return cb(err, null);
@@ -35,7 +35,7 @@ function hashP(pwd, cb){  //salt and hash for encrytion
             return cb(null, hash);
         })
     })
-}
+}*/
 
 /* GET users listing. */
 /*router.get('/', function (req, res, next) {
@@ -185,8 +185,8 @@ router.post('/doLogin', function (req, res, next) {
 });
 });
 
-router.get('/download/:filename', function (req, res, next) {
-	var filepath = "./public/uploads/"+req.param("filename");
+router.get('/download/:username/:filename', function (req, res, next) {
+	var filepath = "./public/uploads/"+req.param("username")+'/' +req.param("filename");
 	
      res.download(filepath);
 
@@ -226,15 +226,7 @@ router.post('/doSignup', function (req, res, next) {
 			    if (err.code !== 'EEXIST') throw err
 			  }
 			};
-		/*	hashP(data.reqPassword, function (err, hash) {
-			      if (err) throw err;
-			      data.reqPassword = hash;
-			      // NOW, SAVE THE VALUE AT DB
-			      con.query("insert into users ?", [data], function (err, rows) {
-			        if (err) throw err;
-			        res.send("Value has bee inserted");
-			    })
-			}); */
+		
 			mysql.getConnection(function(err,connect){
 		        if (err) {
 		            connect.release();
@@ -243,7 +235,7 @@ router.post('/doSignup', function (req, res, next) {
 		       /* hashP(data.password, function (err, hash) {
 				      if (err) throw err;
 				      data.password = hash;*/
-		        var hash = crypto.createHmac('sha512', key);
+		        var hash = crypto.createHmac('sha512', key); //encrytion using SHA512
 		        hash.update(data.password);
 		        data.password = hash.digest('hex');
 		       var query = connect.query("insert into users set ?",[data],function(err,rows){
@@ -289,17 +281,11 @@ router.post('/doSignup', function (req, res, next) {
 router.post('/doShare', function (req, res, next) {
 
 	var username = req.body.username;
-    var email = username.split(',');		  
-	/*  var reqUsername = req.body.username;
-			    var reqPassword = req.body.password;
-			    var reqfirstname = req.body.firstname;
-			    var reqlastname = req.body.lastname;
-			    var reqemail = req.body.email;
-			    var reqpassword = req.body.password; */
-			    // Just checking if the username is in our user's array
-			 /*   var theUser = users.filter(function(user){
-			        return user.username === reqUsername;
-			    }); */
+	var shareuser = req.body.username1;
+    var usernames = shareuser.split(',');
+    var userfolder = 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/' + req.body.username + '/' + req.body.activeItemName;
+	var sharetouser ;
+	console.log(userfolder);
 /*var getUser="insert into shareuser(username, foldername) values ('"+req.param("username")+"','" + req.param("activeItemName")+"')";
 				console.log("Query is:"+getUser);
 	var getUser1="insert into shareuser(username, foldername) values ('"+req.param("username1")+"','" + req.param("activeItemName")+"')";	
@@ -310,17 +296,22 @@ router.post('/doShare', function (req, res, next) {
 		                connect.release();
 		                throw err;
 		            }
-		            for(i = 0; i < email.length; i++) {
-
-		            	var getUser="insert into shareuser(username, foldername) values ('" + email[i] +"','" + req.param("activeItemName")+"')";
-		            	  
+		            for(i = 0; i < usernames.length; i++) {
+                       sharetouser = 'C:/Users/thirt/eclipse-workspace-javascript/LoginAppReactJS/LoginAppReactJS/nodelogin/public/uploads/' + usernames[i] + '/' + req.body.activeItemName;
+		            	var getUser="insert into shareuser(username, foldername) values ('" + usernames[i] +"','" + req.param("activeItemName")+"')";
+		            	console.log(sharetouser)  ;
 		            	console.log("Query is:" + getUser);
-
+		            	fse.copy(userfolder, sharetouser, function(err)  {
+		            		if(err){
+		            			return console.error(err)    		
+		            		}
+		            	})
+		            	  
 		                connect.query(getUser);
 		            }
 		            connect.release();
 		                if (!err) {
-		                	if(email.length>0)
+		                	if(usernames.length>0)
 		                		{
 		                    res.status(201).json({message: "Sharing successful"});
 		                		}
