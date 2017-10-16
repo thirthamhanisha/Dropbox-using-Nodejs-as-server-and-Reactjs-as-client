@@ -6,6 +6,7 @@ import { mount, shallow } from 'enzyme';
 import {expect} from 'chai';
 
 import NewerHomePage from './components/NewerHomePage';
+
 enzyme.configure({ adapter: new Adapter() });
 
 describe('<NewerHomePage/>', function () {
@@ -17,12 +18,16 @@ describe('<NewerHomePage/>', function () {
 	  
 	});
 
+
+
 describe('<NewerHomePage/>', () => {
 	  it('contains an <Login/> component', function () {
 	    const wrapper = mount(<NewerHomePage/>);
 	    expect(wrapper.find('Login')).to.have.length(1);
 	  });
 });
+
+
 
 it('renders without crashing', () => {
   const div = document.createElement('div');
