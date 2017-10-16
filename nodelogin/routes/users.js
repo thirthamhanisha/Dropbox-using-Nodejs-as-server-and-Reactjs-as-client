@@ -186,7 +186,7 @@ router.post('/doLogin', function (req, res, next) {
 });
 
 router.get('/download/:username/:filename', function (req, res, next) {
-	var filepath = "./public/uploads/"+req.param("username")+'/' +req.param("filename");
+	var filepath = "./public/uploads/"+req.body.username+'/' +req.body.filename;
 	
      res.download(filepath);
 

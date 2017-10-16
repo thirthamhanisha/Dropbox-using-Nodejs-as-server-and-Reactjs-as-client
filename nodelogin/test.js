@@ -9,8 +9,8 @@ var request = require('supertest');
 var server = require('./bin/www');
 
 const userCredentials = {
-    username: 'thirthamhanisha@gmail.com',
-    password: 'baby'
+    username: 'mt1@gmail.com',
+    password: 'm123'
 }
 
 var authenticated = request.agent(server);
@@ -53,10 +53,13 @@ describe('Server test', function(){
     });
 	describe('upload', function(){
         it('upload should be sucessful', function(done){
-
+        	const newfile = {
+        		username: 'mt1@gmail.com'
+        	}
+        	
             authenticated
                 .post('/users/upload')
-                .send(userCredentials)
+                .send(newfile)
                 .end(function(err, response){
                     expect(response.statusCode).to.equal(201);
                     expect('Location','/home');
@@ -71,10 +74,10 @@ describe('Server test', function(){
     describe('Sign up', function(){
         it('Signup should be successful', function(done){
             const newUser = {
-                firstname: 'first',
-                lastname: 'last',
-                email: 'first@last.com',
-                password: 'password'
+                firstname: 'hanisha',
+                lastname: 'thirtham',
+                email: 'hanishathirtham@gmail.com',
+                password: 'hanisha123'
             }
             authenticated
                 .post('/users/doSignup')
@@ -89,7 +92,43 @@ describe('Server test', function(){
         });
     });
     
+    describe('share', function(){
+        it('share should be sucessful', function(done){
+               const newUser = {
+            		   username: 'mt1@gmail.com',
+            		   username1: 'mt@gmail.com',	
+            		   activeItemName: 'dropbox-logo1'
+               }
+            authenticated
+                .post('/users/doShare')
+                .send(newUser)
+                .end(function(err, response){
+                    expect(response.statusCode).to.equal(201);
+                    expect('Location','/home');
+                    done();
+                });
+
+
+        });
+    });
     
-    
-    
+    describe('download', function(){
+        it('download should be sucessful', function(done){
+               const newUser = {
+            		   username: 'mt1@gmail.com',
+            		  // username1: 'mt@gmail.com',	
+            		   filename: 'dropbox-logo1'
+               }
+            authenticated
+                .get('/users/download/:username/:filename')
+                .send(newUser)
+                .end(function(err, response){
+                    expect(response.statusCode).to.equal(201);
+                    expect('Location','/home');
+                    done();
+                });
+
+
+        });
+    });  
 })
