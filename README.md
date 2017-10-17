@@ -2,9 +2,9 @@
 
 
 Run the following queries in the MySQL DB:
-1. create table users(username varchar(25), firstname varchar(25), lastname varchar(25), password1 varchar(25), password varchar(1000));
+1. create table users(username varchar(25), firstname varchar(100), lastname varchar(100), password1 varchar(100), password varchar(1000));
 
-2. create table shareuser (username varchar(100),foldername varchar(40));
+2. create table shareuser (username varchar(100),foldername varchar(100));
 
 Go to nodelogin folder in command prompt and execute following command:
 1. npm install
